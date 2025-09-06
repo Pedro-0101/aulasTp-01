@@ -1,0 +1,8 @@
+<app-header 
+[tituloLoja]="'LOJA TP-01'"
+(textoSobre)="receberSobre($event)"></app-header>
+<div class="container">
+  <router-outlet></router-outlet>
+  {{ sobre }}
+</div>
+<app-footer></app-footer>

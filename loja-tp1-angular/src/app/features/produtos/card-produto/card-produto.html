@@ -1,0 +1,42 @@
+<article class="card" [class.promo]="produto().promo">
+  <img class="thumb" [src]="produto().imageUrl" [alt]="produto().nome" />
+  <div class="conteudo">
+    <h3 class="titulo">{{ produto().nome }}</h3>
+
+    @switch (produto().state) {
+    @case ('Novo') {
+    <span class="selo novo" aria-label="Produto novo">Novo</span>
+    }
+    @case ('Esgotado') {
+    <span class="selo esgotado" aria-label="Produto esgotado">Esgotado</span>
+    }
+    }
+    <p class="desc">{{ produto().descricao }}</p>
+    <div class="precoconteiner">
+      @if(produto().promo){
+      <span class="preco desconto">
+        {{ produto().preco | desconto: 10 | currency:'BRL':'symbol':'1.2-2' }}
+      </span>
+      <span class="preco">
+        {{ produto().preco | currency:'BRL':'symbol':'1.2-2' }}
+      </span>
+      }@else {
+      <span class="preco">
+        {{ produto().preco | currency:'BRL':'symbol':'1.2-2' }}
+      </span>
+      }
+    </div>
+
+    <div class="linhapreco">
+      <!-- two-way ligando o model() do filho a um signal local -->
+      <app-quantidade-controle [(contador)]="qtde"></app-quantidade-controle>
+    </div>
+
+    <div class="acoes">
+      <button type="button" class="btn ghost" (click)="onView()">Ver detalhes</button>
+      @if (produto().state != 'Esgotado' && qtde() > 0) {
+      <button type="button" class="btn primary" (click)="onAdd()">Adicionar</button>
+      }
+    </div>
+  </div>
+</article>
