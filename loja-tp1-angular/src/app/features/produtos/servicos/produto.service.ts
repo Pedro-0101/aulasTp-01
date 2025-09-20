@@ -41,4 +41,8 @@ export class ProdutoService {
     this.logger.info('[ProdutoService] - Listando produtos');
     return of(this.listaMock).pipe(delay(1000));
   }
+
+  getById(id: number): Observable<Produto | undefined>{
+    return of(this.listaMock.find( p => p.id == id)).pipe(delay(500));
+  }
 }
