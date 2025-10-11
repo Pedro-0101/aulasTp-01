@@ -5,6 +5,7 @@ import { Produto } from '../../../model/produto';
 import { ProdutoService } from '../servicos/produto.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-lista-produtos',
@@ -16,16 +17,44 @@ import { Router } from '@angular/router';
 export class ListaProdutos {
   private produtoService = inject(ProdutoService);
   private router = inject(Router)
+  loading = signal(true)
+  categoriaSelecionada = signal('')
 
-  private produtos = toSignal<Produto[], Produto[]>(this.produtoService.listar(), {
+  produtos = toSignal<Produto[], Produto[]>(this.produtoService.listar().pipe(
+    finalize(() => this.loading.set(false))
+  ), {
     initialValue: [],
+  });
+
+  selecionarCategoria(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.categoriaSelecionada.set(selectElement.value || '');
+  }
+
+  produtosFiltrados = computed(() => {
+    const categoria: string = this.categoriaSelecionada();
+    const lista = this.produtos();
+
+    if (!categoria) {
+      return lista;
+    }
+
+    return lista.filter(p => p.categoria === categoria);
+  });
+
+  categorias = computed(() => {
+    const todasCategorias = this.produtos().map(p => p.categoria);
+    return [...new Set(todasCategorias)]; // remove duplicatas
   });
 
   // Filtro de promoção
   apenasPromo = signal(false);
-  prodExibidos = computed(() =>
-    this.apenasPromo() ? this.produtos().filter((p) => p.promo) : this.produtos()
-  );
+  prodExibidos = computed(() => {
+    const produtos = this.produtosFiltrados();
+    return this.apenasPromo()
+      ? produtos.filter((p) => p.promo)
+      : produtos;
+  });
   alternarPromo() {
     this.apenasPromo.update((p) => !p);
   }

@@ -1,48 +1,38 @@
 import { inject, Injectable } from '@angular/core';
 import { LoggerService } from '../../../core/service/logger/logger.service';
-import { Produto } from '../../../model/produto';
-import { delay, Observable, of } from 'rxjs';
+import { Produto, ProdutoMapper } from '../../../model/produto';
+import { catchError, delay, Observable, of, map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProdutoService {
   logger = inject(LoggerService);
-
-  private readonly listaMock: Produto[] = [
-    {
-      id: 1,
-      nome: 'Teclado Mecânico',
-      preco: 1200,
-      descricao: 'Switch blue, RGB.',
-      imageUrl: 'images/keyboard.jpg',
-      promo: true,
-      state: 'Esgotado',
-    },
-    {
-      id: 2,
-      nome: 'Mouse Gamer 7200 DPI',
-      preco: 649.5,
-      descricao: '10 botões, macro programável.',
-      imageUrl: 'images/mouse.jpg',
-      state: 'Novo',
-    },
-    {
-      id: 3,
-      nome: 'Headset Surround 7.1',
-      preco: 899.9,
-      descricao: 'Microfone com redução de ruído.',
-      imageUrl: 'images/headset.jpg',
-      state: 'Usado',
-    },
-  ];
+  http = inject(HttpClient);
 
   listar(): Observable<Produto[]> {
     this.logger.info('[ProdutoService] - Listando produtos');
-    return of(this.listaMock).pipe(delay(1000));
+    return this.http.get<any[]>('https://fakestoreapi.com/products').pipe(
+      map(lista => lista.map(json => ProdutoMapper.fromJson(json))),
+      catchError(err => of([]))
+    )
   }
 
-  getById(id: number): Observable<Produto | undefined>{
-    return of(this.listaMock.find( p => p.id == id)).pipe(delay(500));
+  getById(id: number): Observable<Produto | null>{
+    this.logger.info('[ProdutoService] - Buscando produto com id' + id);
+    if(!id){
+      throw new Error('Id invalido');
+    }
+    const url = 'https://fakestoreapi.com/products/' + id;
+    const produto = this.http.get<any>(url).pipe(
+      map(json => ProdutoMapper.fromJson(json)),
+      catchError(err => of(null))
+    )
+    if(!produto){
+      throw new Error('Produto nao encontrado');
+    }else {
+      return produto
+    }
   }
 }

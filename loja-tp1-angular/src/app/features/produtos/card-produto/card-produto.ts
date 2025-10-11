@@ -3,11 +3,12 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { QuantidadeControle } from '../../../shared/quantidade-controle/quantidade-controle';
 import { Produto } from '../../../model/produto';
 import { DescontoPipe } from '../../../shared/pipes/desconto-pipe';
+import { Truncar } from "../../../shared/pipes/truncar-pipe";
 
 @Component({
   selector: 'app-card-produto',
   standalone: true,
-  imports: [CommonModule, QuantidadeControle, CurrencyPipe, DescontoPipe],
+  imports: [CommonModule, QuantidadeControle, CurrencyPipe, DescontoPipe, Truncar],
   templateUrl: './card-produto.html',
   styleUrls: ['./card-produto.css']
 })

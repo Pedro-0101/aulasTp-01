@@ -1,7 +1,7 @@
 <article class="card" [class.promo]="produto().promo">
   <img class="thumb" [src]="produto().imageUrl" [alt]="produto().nome" />
   <div class="conteudo">
-    <h3 class="titulo">{{ produto().nome }}</h3>
+    <h3 class="titulo">{{ produto().nome | truncar:40:false:'' }}</h3>
 
     @switch (produto().state) {
     @case ('Novo') {
@@ -11,7 +11,7 @@
     <span class="selo esgotado" aria-label="Produto esgotado">Esgotado</span>
     }
     }
-    <p class="desc">{{ produto().descricao }}</p>
+    <p class="desc">{{ produto().descricao | truncar:50 }}</p>
     <div class="precoconteiner">
       @if(produto().promo){
       <span class="preco desconto">

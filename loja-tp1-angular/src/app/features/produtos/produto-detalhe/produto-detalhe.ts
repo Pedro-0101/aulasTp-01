@@ -17,13 +17,13 @@ export class ProdutoDetalhe {
   private produtoService = inject(ProdutoService);
 
   loading = signal(true);
-  produto = signal<Produto | undefined>(undefined);
+  produto = signal<Produto | null>(null);
 
   constructor() {
     this.route.paramMap.subscribe(pm => {
       const id = pm.get('id') ? Number(pm.get('id')) : NaN;
       if(isNaN(id)){
-        this.produto.set(undefined);
+        this.produto.set(null);
         this.loading.set(false);
         return;
       }

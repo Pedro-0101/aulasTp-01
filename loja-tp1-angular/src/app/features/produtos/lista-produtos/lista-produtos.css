@@ -1,5 +1,5 @@
 .catalogo {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 24px auto;
   padding: 0 16px;
 }
@@ -12,8 +12,8 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 2fr));
+  gap: 8px;
 }
 
 .barradetarefas {
@@ -31,10 +31,9 @@
   padding: 8px 12px;
   cursor: pointer;
 }
-
 .btn.sopromo.ativo {
   border-color: #1976d2;
-  box-shadow: 0 0 0 2px rgba(25, 118, 210, .1);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.08);
 }
 
 .vazio {

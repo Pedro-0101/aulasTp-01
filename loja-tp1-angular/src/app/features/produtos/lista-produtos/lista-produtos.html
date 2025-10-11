@@ -7,9 +7,21 @@
       @else {
       somente promocoes
       }</button>
+    <select [value]="categoriaSelecionada()" (change)="selecionarCategoria($event)">
+      <option value="">-- Todas as categorias --</option>
+      @if (categorias()) {
+      @for (cat of categorias(); track $index) {
+      <option [value]="cat">{{ cat }}</option>
+      }
+      }
+    </select>
   </header>
   <h2>Produtos</h2>
 
+  @if(loading()) {
+  <p>Carregando produtos...</p>
+  }
+  @else {
   @if (prodExibidos().length === 0) {
   <p class="vazio">Nenhum produto encontrado para o filtro atual</p>
   }@else {
@@ -19,5 +31,6 @@
     </app-card-produto>
     }
   </div>
+  }
   }
 </section>
