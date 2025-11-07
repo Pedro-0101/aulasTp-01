@@ -1,22 +1,29 @@
+# Nome do workflow exibido na aba "Actions" do GitHub
 name: CI
 
+# Define quando o workflow será executado
 on:
   push:
     branches:
-      - main
+      - main      # O workflow roda sempre que houver um push na branch "main"
 
 jobs:
-  main:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  main:           # Define um job chamado "main"
+    name: Build   # Nome legível do job que aparecerá na interface do GitHub Actions
+    runs-on: ubuntu-latest   # Define o sistema operacional da máquina virtual (Ubuntu mais recente)
 
-      - uses: actions/setup-node@v4
+    steps:        # Lista de etapas que o job irá executar
+      - uses: actions/checkout@v4   # Faz o checkout do código do repositório
         with:
-          node-version: 20
-          cache: 'npm'
-      - run: npx run build
+          fetch-depth: 0            # Obtém todo o histórico de commits (necessário para certos comandos, como gerar changelogs)
+
+      - uses: actions/setup-node@v4   # Configura o Node.js no ambiente de execução
+        with:
+          node-version: 20            # Define a versão do Node.js (versão 20)
+          cache: 'npm'                # Habilita cache automático de dependências do npm para acelerar builds futuros
+
+      - run: npx run build            # Executa o comando de build (usa o script "build" definido no package.json)
+
       - run: curl -X POST -d {} https://api.netlify.com/build_hooks/690e78d782d2839a0107695f
+        # Envia uma requisição POST para o webhook do Netlify, 
+        # disparando uma nova build/deploy no Netlify após o build local concluir
