@@ -19,3 +19,4 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npx run build
+      - run: curl -X POST -d {} https://api.netlify.com/build_hooks/690e78d782d2839a0107695f
