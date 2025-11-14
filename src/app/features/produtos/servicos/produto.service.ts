@@ -10,10 +10,11 @@ import { HttpClient } from '@angular/common/http';
 export class ProdutoService {
   logger = inject(LoggerService);
   http = inject(HttpClient);
+  apiUrl = 'https://fakestoreapi.com/products'
 
   listar(): Observable<Produto[]> {
     this.logger.info('[ProdutoService] - Listando produtos');
-    return this.http.get<any[]>('https://fakestoreapi.com/products').pipe(
+    return this.http.get<any[]>(this.apiUrl).pipe(
       map(lista => lista.map(json => ProdutoMapper.fromJson(json))),
       catchError(err => of([]))
     )
@@ -24,7 +25,7 @@ export class ProdutoService {
     if(!id){
       throw new Error('Id invalido');
     }
-    const url = 'https://fakestoreapi.com/products/' + id;
+    const url = this.apiUrl + id;
     const produto = this.http.get<any>(url).pipe(
       map(json => ProdutoMapper.fromJson(json)),
       catchError(err => of(null))
@@ -34,5 +35,16 @@ export class ProdutoService {
     }else {
       return produto
     }
+  }
+
+  criar(produto: Produto): Observable<any> {
+    let body = {
+      title: produto.nome,
+      price: produto.preco,
+      description: produto.descricao,
+      category: produto.categoria,
+      image: produto.imageUrl,
+    }
+    return this.http.post(this.apiUrl, body);
   }
 }
