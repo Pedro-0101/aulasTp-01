@@ -1,12 +1,17 @@
 <section class="catalogo">
   <header class="barradetarefas">
     <h2>catalogo</h2>
-    <button class="btnPromo" [class.active]="apenasPromo()" (click)="alternarPromo()">
-      @if (apenasPromo()) {
-      mostrar Todos}
-      @else {
-      somente promocoes
-      }</button>
+    <div>
+      <button class="btnPromo" [class.ativo]="apenasPromo()" (click)="alternarPromo()">
+        @if (apenasPromo()) {
+          mostrar Todos
+        }
+        @else {
+          somente promocoes
+        }
+      </button>
+      <button type="button" class="btn primary" (click)="onCreateProduct('/produtos/novo')"> + Novo Produto</button>
+    </div>
     <select [value]="categoriaSelecionada()" (change)="selecionarCategoria($event)">
       <option value="">-- Todas as categorias --</option>
       @if (categorias()) {
